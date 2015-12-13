@@ -127,14 +127,15 @@ module Bundler
         @source ||= first.source
       end
 
-      def for?(platform, required_ruby_version)
-        if spec = @specs[platform]
-          if required_ruby_version && spec_required_ruby_version = spec.required_ruby_version
-            spec_required_ruby_version.satisfied_by?(required_ruby_version)
-          else
-            true
-          end
+      def for?(platform, required_ruby)
+        return true if required_ruby.nil?
+        return false if @specs[platform].nil?
+
+        if @specs[platform].respond_to?(:required_ruby_version)
+          spec_ruby = @specs[platform].required_ruby_version
         end
+
+        spec_ruby.nil? ? true : spec_ruby.satisfied_by?(required_ruby)
       end
 
       def to_s
