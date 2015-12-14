@@ -193,7 +193,7 @@ module Bundler
       @search_for = {}
       @base_dg = Molinillo::DependencyGraph.new
       @base.each {|ls| @base_dg.add_vertex(ls.name, Dependency.new(ls.name, ls.version), true) }
-      @ruby_version = ruby_version
+      @ruby_version = ruby_version && ruby_version.gem_version
     end
 
     def start(requirements)
@@ -273,7 +273,7 @@ module Bundler
           []
         end
       end
-      search.select {|sg| sg.for?(platform, @ruby_version.gem_version) }.
+      search.select {|sg| sg.for?(platform, @ruby_version) }.
         each {|sg| sg.activate_platform(platform) }
     end
 
